@@ -1,0 +1,85 @@
+import pandas as pd
+import numpy as np
+--------------------------------------------------------------------------
+c=pd.read_csv('/content/customer_shopping_behavior.csv')
+c.head(10)
+--------------------------------------------------------------------------
+c.describe()
+
+--------------------------------------------------------------------------
+c.columns=c.columns.str.replace(' ','-')
+c
+--------------------------------------------------------------------------
+c=c.rename(columns={'purchase-amount-(usd)':'purchase-amount'})
+c
+--------------------------------------------------------------------------
+#filling null values
+c['review-rating'] = c['review-rating'].fillna(c.groupby('category')['review-rating'].transform('median'))
+c
+--------------------------------------------------------------------------
+#changing val in particular col
+freq_mapping={'Fortnightly':14,'Weekly':7,'Monthly':30,'Quarterly':90,'Bi-Weekly':14,'Annually':365,'Every 3 Months':90}
+freq_mapping
+--------------------------------------------------------------------------
+c['purchase-frequency-days']=c['frequency-of-purchases'].map(freq_mapping)
+c.head()
+--------------------------------------------------------------------------
+c[['discount-applied','promo-code-used']].head()
+--------------------------------------------------------------------------
+(c['discount-applied']==c['promo-code-used']).all()
+--------------------------------------------------------------------------
+c=c.drop('promo-code-used',axis=1)
+--------------------------------------------------------------------------
+b=['young-adult','adult','aiddle-Aged','senior']
+b
+--------------------------------------------------------------------------
+c['age-group']=pd.qcut(c['age'],q=4,labels=b)
+
+
+--------------------------------------------------------------------------
+!pip install psycopg2-binary sqlalchemy
+
+--------------------------------------------------------------------------
+
+from sqlalchemy import create_engine
+from urllib.parse import quote_plus
+
+--------------------------------------------------------------------------
+!apt-get -y install postgresql
+!service postgresql start
+
+--------------------------------------------------------------------------
+# Set the postgres user's password
+!sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'Anaina@sql';"
+
+--------------------------------------------------------------------------
+# Create the database
+!sudo -u postgres psql -c "CREATE DATABASE customer_behaviour;"
+
+--------------------------------------------------------------------------
+
+
+from sqlalchemy import create_engine
+from urllib.parse import quote_plus
+
+
+--------------------------------------------------------------------------
+username = 'postgres'
+password = quote_plus('Anaina@sql')
+host = 'localhost'
+port = '5432'
+database = 'customer_behaviour'
+
+engine = create_engine(f"postgresql+psycopg2://{username}:{password}@{host}:{port}/{database}")
+
+table_name = "customer"
+c.to_sql(table_name, engine, if_exists="replace", index=False)
+print(f"Data successfully loaded into table {table_name} in database {database}")
+
+--------------------------------------------------------------------------
+!sudo -u postgres psql -d customer_behaviour -c "SELECT * FROM customer LIMIT 5;
+
+
+
+
+
