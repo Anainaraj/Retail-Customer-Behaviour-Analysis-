@@ -13,21 +13,7 @@ Management noticed shifts in purchasing patterns across demographics, product ca
 2. **SQL** — model the data relationally and answer ten specific business questions
 3. **Power BI** — an interactive dashboard for stakeholders to explore the results
 
-## Repository Structure
 
-```
-├── data/
-│   └── customer_shopping_behavior.csv   # raw source data (3,900 records, 18 fields)
-├── python/
-│   └── python.txt                       # data cleaning & feature engineering
-├── sql/
-│   └── sql.sql                          # 10 business-question queries (PostgreSQL)
-├── dashboard/
-│   └── c_b.pbix                         # Power BI dashboard
-├── report/
-│   └── project_report.docx              # full write-up of findings & recommendations
-└── README.md
-```
 
 ## Dataset
 
